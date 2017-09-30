@@ -36,9 +36,11 @@ var database = firebase.database();
          dateAdded: firebase.database.ServerValue.TIMESTAMP
      }
 
-  
-  $("#trainName").val("");
-  $("#destination").val("");
+  console.log(newTrain)
+  database.ref().push(newTrain)
+
+  $("#trainNameInput").val("");
+  $("#destinationInput").val("");
   $("#frequencyInput").val("");
   $("#trainTimeInput").val("");
 });
@@ -46,13 +48,13 @@ var database = firebase.database();
 
 database.ref().orderByChild("dateAdded").on("child_added", function(snapshot) {
   // storing the snapshot.val() in a variable for convenience
-     var firebasetrainName = childSnapshot.val().trainName;
-     var firebasedestination = childSnapshot.val().destination;
-     var firebasetrainTimeInput = childSnapshot.val().trainTimeInput;
-     var firebasefrequencyInput = childSnapshot.val().frequencyInput;
+     var firebasetrainName = snapshot.val().name;
+     var firebasedestination = snapshot.val().destination;
+     var firebasetrainTimeInput = snapshot.val().trainTime;
+     var firebasefrequencyInput = snapshot.val().frequency;
 
-     var diffTime = moment().diff(moment.unix(firebaseTrainTimeInput), "minutes");
-     var timeRemainder = moment().diff(moment.unix(firebaseTrainTimeInput), "minutes") % firebasefrequencyInput;
+     var diffTime = moment().diff(moment.unix(firebasetrainTimeInput), "minutes");
+     var timeRemainder = moment().diff(moment.unix(firebasetrainTimeInput), "minutes") % firebasefrequencyInput;
      var minutes = firebasefrequencyInput - timeRemainder;
 
      var nextTrainArrival = moment().add(minutes, "m").format("hh:mm A");
